@@ -165,10 +165,10 @@ class ImageButtonView: UIImageView, CAAnimationDelegate {
         if let location = touches.first?.location(in: self) {
             if imageSize ~= location {
                 animateLayer()
-            } else {
-                Self.busyImageButtonView = nil
+                return
             }
         }
+        Self.busyImageButtonView = nil
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
