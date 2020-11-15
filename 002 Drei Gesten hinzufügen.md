@@ -78,3 +78,7 @@ class ViewController: UIViewController {
     }
 }
 ```
+
+## Diskussion
+
+Die Lösung ist nicht ideal: Ob es sich bei einer Geste mit zwei Fingern um ein *Pich* oder um ein *Rotation* handeln soll, kann die App nur erraten. Besser wäre eine Geste, die nicht *Pinch* von *Rotation* trennt, sondern beide gleichzeitig behandelt. 
