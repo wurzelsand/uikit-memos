@@ -42,10 +42,12 @@ class ViewController: UIViewController {
         switch dragGesture.state {
         case .began, .changed:
             let translation = dragGesture.translation(in: view)
+            // prevent the center of gestureView to leave bounds
             let endPoint = CGPoint(
                 x: min(max(view.bounds.minX, gestureView.center.x + translation.x), view.bounds.maxX),
                 y: min(max(view.bounds.minY, gestureView.center.y + translation.y), view.bounds.maxY))
             gestureView.center = endPoint
+            // reset translation
             dragGesture.setTranslation(.zero, in: view)
         // The translation should continue a little bit, after gesture finished
         case .ended:
@@ -75,6 +77,7 @@ class ViewController: UIViewController {
         case .began, .changed:
             gestureView.transform = gestureView.transform.rotated(
                 by: rotationGesture.rotation)
+            // reset rotation
             rotationGesture.rotation = .zero
         default:
             ()
@@ -89,6 +92,7 @@ class ViewController: UIViewController {
             gestureView.transform = gestureView.transform.scaledBy(
                 x: pinchGesture.scale,
                 y: pinchGesture.scale)
+            // reset scale
             pinchGesture.scale = 1
         default:
             ()
@@ -106,11 +110,11 @@ extension ViewController: UIGestureRecognizerDelegate {
 }
 
 /**
- Move point `p1` within `rectangle` to `p2`. If `p2` is not inside `rectangle` return last point before leaving `rectangle`.
- - Parameter rectangle: The rectangle containing the moving points.
+ Move point `p1` within `rectangle` to `p2`. If `p2` is not inside `rectangle` return last position before leaving `rectangle`.
+ - Parameter rectangle: The rectangle containing the moving point.
  - Parameter from: The point to start at. Inside `rectangle`.
- - Parameter to: The arrival point.
- - Returns: The arrival point within `rectangle`.
+ - Parameter to: The targeted arrival point. Can be outside `rectangle`
+ - Returns: The bounded arrival point within `rectangle`.
  */
 func moveWithin(rectangle: CGRect, from p1: CGPoint, to p2: CGPoint) -> CGPoint {
     var endPoint = p2
