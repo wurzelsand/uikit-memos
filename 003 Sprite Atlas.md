@@ -2,7 +2,7 @@
 
 ## Aufgabe
 
-Die *Textures* sollen in einen *Texture Atlas* geschrieben werden, aber ein *Asset* soll dafür sorgen, dass es verschiedene Größen der *Textures* passend zum Handy-Typ gibt.
+Die *Sprites* sollen in einen *Texture Atlas* geschrieben werden, aber ein *Asset* soll dafür sorgen, dass es verschiedene Größen der *Sprites* passend zum Handy-Typ gibt.
 
 <a><img src="media/sprite-atlas-ipod-touch.png" width="180"></a>
 <a><img src="media/sprite-atlas-iphone-8-plus.png" width="240"></a>
