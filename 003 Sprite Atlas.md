@@ -4,8 +4,8 @@
 
 Die *Textures* sollen in einen *Texture Atlas* geschrieben werden, aber ein *Asset* soll dafür sorgen, dass es verschiedene Größen der *Textures* passend zum Handy-Typ gibt.
 
-<a><img src="media/sprite-atlas-ipod-touch.png" width="240"></a>
-<a><img src="media/sprite-atlas-iphone-8-plus.png" width="320"></a>
+<a><img src="media/sprite-atlas-ipod-touch.png" width="180"></a>
+<a><img src="media/sprite-atlas-iphone-8-plus.png" width="240"></a>
 
 ## Umsetzung
 
@@ -23,6 +23,65 @@ Die *Textures* sollen in einen *Texture Atlas* geschrieben werden, aber ein *Ass
   
 * Füge erst mal ein einzelnes Sprite in drei Versionen hinzu:
 
-  <a><img src="media/asset-catalog-circle.png" width="400"></a>
+  <a><img src="media/asset-catalog-circle.png" width="500"></a>
   
-  Eigentlich reicht *2x* und *3x*, da *1x* nur von wirklich alten Handys benutzt werden: [iOS Resolution](https://ios-resolution.com), [iOS Device Display Summary](https://developer.apple.com/library/archive/documentation/DeviceInformation/Reference/iOSDeviceCompatibility/Displays/Displays.html)
+  Eigentlich reichen *2x* und *3x*, da *1x* nur von wirklich alten Handys benutzt werden: [iOS Resolution](https://ios-resolution.com), [iOS Device Display Summary](https://developer.apple.com/library/archive/documentation/DeviceInformation/Reference/iOSDeviceCompatibility/Displays/Displays.html)
+  
+* *ViewController.swift*:
+
+  ```swift
+  import SpriteKit
+
+  class ViewController: UIViewController {
+
+      override func viewDidLoad() {
+          super.viewDidLoad()
+          if let spriteView = view as? SKView {
+              spriteView.showsFPS = true
+              spriteView.showsDrawCount = true
+              spriteView.showsNodeCount = true
+          }
+      }
+
+      override func viewWillAppear(_ animated: Bool) {
+          let scene = TestScene()
+          scene.size = view.bounds.size
+          if let spriteView = view as? SKView {
+              spriteView.presentScene(scene)
+          }
+      }
+
+  }
+  ```
+
+* *TestScene.swift*:
+
+  ```swift
+  import SpriteKit
+
+  class TestScene: SKScene {
+      var contentCreated = false
+
+      override func didMove(to view: SKView) {
+          if contentCreated == false {
+              createSceneContents()
+              contentCreated = true
+          }
+      }
+
+      func createSceneContents() {
+          backgroundColor = .blue
+          scaleMode = .aspectFit
+
+          let atlas = SKTextureAtlas(named: "sprites")
+          let texture = atlas.textureNamed("circle")
+          let sprite = SKSpriteNode(texture: texture)
+          if let spriteView = view {
+              sprite.position = CGPoint(x: spriteView.bounds.width / 2,
+                                        y: spriteView.bounds.height / 2)
+              sprite.name = "myCircle"
+              addChild(sprite)
+          }
+      }
+  }
+  ```
