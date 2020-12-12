@@ -85,3 +85,13 @@ Die *Textures* sollen in einen *Texture Atlas* geschrieben werden, aber ein *Ass
       }
   }
   ```
+  
+  ## Diskussion
+  
+  * Man kann auch das *Sprite* direkt erzeugen:
+  
+    ```swift
+    let sprite = SKSpriteNode(imageNamed: "circle")
+    ```
+    
+  * Wenn wir keine verschiedenen Versionen unserer *Sprites* benötigen, reicht es, wenn wir einen Ordner, der mit *.atlas* endet, zum Projekt hinzufügen und wir dort die Sprites unterbringen. Zu viele Sprites sollten wir jedoch nicht in einen einzelnen *Atlas*-Ordner legen, da ansonsten im Hintergrund mehrere *Textures* erzeugt werden müssten.
