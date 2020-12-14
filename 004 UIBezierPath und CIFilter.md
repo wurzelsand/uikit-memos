@@ -67,4 +67,4 @@ class TestScene: SKScene {
 
 ## Diskussion
 
-Eine Übersicht über alle Filter findet man auf (CoreImageFilterReference)[https://developer.apple.com/library/archive/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html]
+Eine Übersicht über alle Filter findet man auf [CoreImageFilterReference](https://developer.apple.com/library/archive/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html)
