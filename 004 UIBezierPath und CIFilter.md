@@ -4,7 +4,7 @@
 
 Zeichne ein Dreieck und wende einen Filter darauf an.
 
-<a><img src="" width="300"></a>
+<a><img src="media/uibezierpath-cifilter.png" width="300"></a>
 
 ## Ausführung
 
@@ -64,3 +64,7 @@ class TestScene: SKScene {
     }
 }
 ```
+
+## Diskussion
+
+Eine Übersicht über alle Filter findet man auf (CoreImageFilterReference)[https://developer.apple.com/library/archive/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html]
