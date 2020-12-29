@@ -4,7 +4,7 @@
 
 Wir haben eine Vectorgrafik der Größe 300 x 100 (beliebige Einheit) als PDF gespeichert und wollen sie nun in ein `UIImage` der Größe 360 pt x 120 pt laden. Da das Ziel (`UIImage`) andere Seitenverhältnisse als die Quelle (PDF) hat, reicht eine einfache Skalierung nicht aus. Wir wollen, dass das Quellbild möglichst groß und zentriert dargestellt wird, ohne Ränder abzuschneiden oder das Bild zu verzerren. Das entspricht `UIView.ContentMode.scaleAspectFit`. Da die positive X-Achse von Core Graphics von oben (Ursprung) nach unten verläuft und die positive X-Achse von PDF-Dateien von unten (Ursprung) nach oben verläuft, muss das Bild außerdem gespiegelt werden.
 
-<a><img src="media/flip-and-scale-with-core-graphics.svg" width="640"></a>
+<a><img src="media/flip-and-scale-with-core-graphics.svg" width="480"></a>
 
 ## Ausführung
 
