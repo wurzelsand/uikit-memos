@@ -46,15 +46,15 @@ extension UIImage {
 /**
  Wrapper for a single line NSAttributedString to create an Image with no margins.
  */
-private class AttributedStringWrapper {
+class AttributedStringWrapper {
     
-    enum CTFrameError: Error {
+    private enum CTFrameError: Error {
         case fatal(String)
     }
     
-    let string: NSAttributedString
-    var croppingBounds = CGRect()
-    let canvas: CGRect
+    private let string: NSAttributedString
+    private var croppingBounds = CGRect()
+    private let canvas: CGRect
     
     init?(singleLine: NSAttributedString) {
         self.string = singleLine
