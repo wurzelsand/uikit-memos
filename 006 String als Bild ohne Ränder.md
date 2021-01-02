@@ -170,3 +170,15 @@ private class AttributedStringWrapper {
     }
 }
 ```
+
+## Diskussion
+
+Statt `let boundsInLineCoordinates = CTLineGetImageBounds(firstLine, context)` ginge auch:
+
+```swift
+let boundsInLineCoordinates = CTLineGetBoundsWithOptions(
+    firstLine,
+    [CTLineBoundsOptions.useGlyphPathBounds])
+```
+
+Dann werden die Koordinaten auch nicht gerundet und könnten möglicherweise präziesere Ergebnisse liefern???
