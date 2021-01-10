@@ -24,7 +24,6 @@ extension UIImage {
             return nil
         }
         let page = documentPage.getBoxRect(.mediaBox)
-        print(page)
         let scale = min(size.width / page.width, size.height / page.height)
         let renderer = UIGraphicsImageRenderer(size: size)
         let image = renderer.image {context in
@@ -65,10 +64,10 @@ class ViewController: UIViewController {
         let size = CGSize(width: 360, height: 120)
         
         let image = UIImage.fromPDF(url: url, atSize: size, background: .cyan)
-        let circleView = UIImageView(image: image)
+        let imageView = UIImageView(image: image)
         
-        circleView.center = CGPoint(x: view.bounds.width / 2, y: view.bounds.height / 2)
-        view.addSubview(circleView)
+        imageView.center = CGPoint(x: view.bounds.width / 2, y: view.bounds.height / 2)
+        view.addSubview(imageView)
     }
 }
 ```
