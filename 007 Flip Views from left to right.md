@@ -145,7 +145,7 @@ func yRotationAnimation(into rotationView: UIView,
 
 ## Diskussion
 
-* `var locked` soll verhindern, dass die Animation während ihrer Ausführung erneut aufgerufen wird. Möglicherweise brauchen wir aber `DispatchSemaphore` oder ähnliches, da die Variable aus verschiedenen Threads gelesen werden könnte.
+* `var locked` soll verhindern, dass die Animation während ihrer Ausführung erneut aufgerufen wird.
 
 * `func yRotationAnimation` erzeugt nicht nur eine Animation sondern setzt auch gleich die Transformation des dazugehörigen Views auf den Anfangswert. Sonst würde beim `addSubview` kurz das untransformierte View angezeigt, bevor dessen Animation beginnt.
 
