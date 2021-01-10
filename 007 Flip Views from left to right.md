@@ -52,6 +52,7 @@ class ViewController: UIViewController {
     }
 
 }
+```
 
 Nun wollen wir eine ähnliche Animation über Core Animation erstellen:
 
