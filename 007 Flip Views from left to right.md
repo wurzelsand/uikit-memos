@@ -153,4 +153,136 @@ func yRotationAnimation(into rotationView: UIView,
 
 * `fromView.layer.removeAnimation` und `toView.layer.removeAnimation` sind notwendig, da sie ansonsten zukünftige Animationen überlagern. Wir erinnern uns: Wir hatten den Animationen mit `.isRemovedOnCompletion = false` den Befehl gegeben, sich nach ihrer Beendigung nicht automatisch zu entfernen, daher müssen wir die Animation nun selber explizit entfernen.
 
+## Version 2
+
+Ich finde die verschachtelten Blöcke nicht besonders schön. Je mehr Animationen zu einer einer einzelnen zusammengesetzt werden, desto fehleranfälliger wird es. Die folgende Version ist zwar länger, lässt sich aber besser erweitern.
+
+```swift
+import UIKit
+
+func flipTransition(from fromView: UIView,
+                    to toView: UIView,
+                    duration: TimeInterval,
+                    completion: (() -> Void)? = nil) {
+    guard let superview = fromView.superview else {
+        return
+    }
+    TransactionAnimation.perform(
+        fromView.disappearFromLeftToMiddle(duration: duration / 2),
+        toView.appearFromMiddleToRight(duration: duration / 2, in: superview),
+        in: superview,
+        finishWith: completion)
+}
+
+/**
+ - Parameter run: Prepare and run the animation.
+ - Parameter completion: Set state after animation is finished.
+ */
+struct TransactionAnimation {
+    let run: () -> Void
+    let completion: () -> Void
+}
+
+extension TransactionAnimation {
+    private static var performingSuperviews = Set<UIView>()
+    
+    /**
+     - Parameter animations: `TransactionAnimations` to be performed one after another.
+     - Parameter view: `superview` of the animated views. Calls are refused during animation.
+     - Parameter trailer: The completion block to be performed after all animations are finished.
+     */
+    static func perform(_ animations: TransactionAnimation...,
+                        in view: UIView,
+                        finishWith trailer: (() -> Void)? = nil) {
+        guard !performingSuperviews.contains(view) else {
+            return
+        }
+        performingSuperviews.insert(view)
+        perform(animations, in: view, finishWith: trailer)
+    }
+    
+    private static func perform(_ animations: [TransactionAnimation],
+                                 in view: UIView,
+                                 finishWith trailer: (() -> Void)? = nil) {
+        var remainingAnimations = animations
+        let animation = remainingAnimations.removeFirst()
+        
+        CATransaction.setCompletionBlock {
+            animation.completion()
+            if remainingAnimations.isEmpty {
+                trailer?()
+                performingSuperviews.remove(view)
+            } else {
+                perform(remainingAnimations, in: view, finishWith: trailer)
+            }
+        }
+        animation.run()
+        CATransaction.commit()
+    }
+    
+}
+
+fileprivate extension UIView {
+    func disappearFromLeftToMiddle(duration: TimeInterval) -> TransactionAnimation {
+        let key = UUID().uuidString
+        let animation = makeRotationAnimation(
+            duration: duration,
+            startAngle: 0,
+            endAngle: CGFloat.pi / 2,
+            timingFunctionName: .easeIn)
+        self.rotateLayerAroundYAxis(angle: 0)
+        
+        return TransactionAnimation(run: {
+            self.layer.add(animation, forKey: key)
+        }, completion: {
+            self.layer.removeAnimation(forKey: key)
+            self.removeFromSuperview()
+        })
+    }
+    
+    func appearFromMiddleToRight(duration: TimeInterval, in superview: UIView) -> TransactionAnimation {
+        let key = UUID().uuidString
+        let animation = makeRotationAnimation(
+            duration: duration,
+            startAngle: -CGFloat.pi / 2,
+            endAngle: 0,
+            timingFunctionName: .easeOut)
+        self.rotateLayerAroundYAxis(angle: -CGFloat.pi / 2)
+        
+        return TransactionAnimation(run: {
+            superview.addSubview(self)
+            self.layer.add(animation, forKey: key)
+        }, completion: {
+            self.layer.removeAnimation(forKey: key)
+            self.layer.transform = CATransform3DIdentity
+        })
+    }
+    
+}
+
+fileprivate func makeRotationAnimation(
+    duration: TimeInterval,
+    startAngle: CGFloat,
+    endAngle: CGFloat,
+    timingFunctionName: CAMediaTimingFunctionName = .default)
+-> CABasicAnimation {
+    let animation = CABasicAnimation(keyPath: "transform.rotation.y")
+    animation.duration = duration
+    animation.fromValue = startAngle
+    animation.toValue = endAngle
+    animation.timingFunction = CAMediaTimingFunction(name: timingFunctionName)
+    animation.fillMode = .forwards
+    animation.isRemovedOnCompletion = false
+    return animation
+}
+
+fileprivate extension UIView {
+    func rotateLayerAroundYAxis(angle: CGFloat) {
+        var transform = CATransform3DIdentity
+        transform.m34 = -1 / 400
+        transform = CATransform3DRotate(transform, angle, 0, 1, 0)
+        self.layer.transform = transform
+    }
+}
+```
 
