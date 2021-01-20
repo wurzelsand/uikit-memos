@@ -155,7 +155,7 @@ func yRotationAnimation(into rotationView: UIView,
 
 ## Version 2
 
-Ich finde die verschachtelten Blöcke nicht besonders schön. Je mehr Animationen zu einer einer einzelnen zusammengesetzt werden, desto fehleranfälliger wird es. Die folgende Version ist zwar länger, lässt sich aber besser erweitern.
+Ich finde die verschachtelten `CATransaction.begin`-`CATransaction.commit`-Blöcke nicht besonders schön. Je mehr Animationen zu einer einer einzelnen zusammengesetzt werden, desto fehleranfälliger wird es. Die folgende Version ist zwar länger, lässt sich aber besser erweitern.
 
 ```swift
 import UIKit
