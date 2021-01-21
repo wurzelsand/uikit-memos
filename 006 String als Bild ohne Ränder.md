@@ -42,27 +42,27 @@ func createImage(string: String, font: UIFont, size: CGSize? = nil) -> UIImage? 
  `NSMutableAttributedString`. May consists of variously formatted words.
  */
 func createImage(with text: NSAttributedString, size: CGSize? = nil) -> UIImage? {
-    var properties = TextProperties(singleLine: text)
-    let isBookedForCropping = (size == nil)
+    var measurings = TextMeasurings(singleLine: text)
     if let size = size {
-        properties.canvas.size = size
+        measurings.canvas.size = size
     }
-    UIGraphicsBeginImageContext(properties.canvas.size)
+    UIGraphicsBeginImageContext(measurings.canvas.size)
     guard let context = UIGraphicsGetCurrentContext() else { return nil }
-    properties.flipCanvasVertical(context: context)
-    guard let _ = try? properties.drawToCanvasCenter(in: context) else { return nil }
+    measurings.flipCanvasVertical(context: context)
+    guard let _ = try? measurings.drawToCanvasCenter(in: context) else { return nil }
     let image = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
-    if isBookedForCropping {
-        let croppingBounds = properties.croppingBounds
+    if size == nil {
+        let croppingBounds = measurings.croppingBounds
         let croppedImage = image?.cgImage?.cropping(to: croppingBounds)
         return croppedImage.map { UIImage(cgImage: $0) }
     }
     return image
 }
 
-private struct TextProperties {
+private struct TextMeasurings {
     private struct FrameError: Error {}
+    
     private var text = NSAttributedString()
     private var textBounds = CGRect()
     var canvas = CGRect()
