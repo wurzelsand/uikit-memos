@@ -139,4 +139,4 @@ private struct TextMeasurings {
 
 ## Diskussion
 
-Statt `CTLineGetBoundsWithOptions` ginge auch `CTLineGetImageBounds`.
+Statt `CTLineGetBoundsWithOptions` ginge auch `CTLineGetImageBounds`. Leider berücksichtigt keine der beiden Methoden Texteffekte wie z.B. Schatten.
