@@ -77,9 +77,8 @@ class SwipingController: UICollectionViewController, UICollectionViewDelegateFlo
         case 1:
             return days.count
         default:
-            ()
+            return 0
         }
-        return 0
     }
     
     override func collectionView(_ collectionView: UICollectionView,
