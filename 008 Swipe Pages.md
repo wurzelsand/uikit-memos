@@ -165,7 +165,7 @@ class DayCell: UICollectionViewCell {
 }
 ```
 
-**MonthCell.swift**:
+**MonthCell.swift** (hier fast identisch mit **DayCell.swift**):
 
 ```swift
 import UIKit
