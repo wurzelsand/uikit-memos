@@ -142,21 +142,11 @@ class DayCell: UICollectionViewCell {
         super.init(frame: frame)
         backgroundColor = .yellow
         addSubview(label)
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint(item: label,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: safeAreaLayoutGuide,
-                           attribute: .leading,
-                           multiplier: 1,
-                           constant: 8).isActive = true
-        NSLayoutConstraint(item: label,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: safeAreaLayoutGuide,
-                           attribute: .top,
-                           multiplier: 1,
-                           constant: 8).isActive = true
+        NSLayoutConstraint.activate(
+            [label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+             label.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor)])
     }
     
     required init?(coder: NSCoder) {
@@ -170,7 +160,7 @@ class DayCell: UICollectionViewCell {
 ```swift
 import UIKit
 
-class DayCell: UICollectionViewCell {
+class MonthCell: UICollectionViewCell {
     
     var text = "" {
         didSet {
@@ -183,23 +173,13 @@ class DayCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .yellow
+        backgroundColor = .green
         addSubview(label)
+        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint(item: label,
-                           attribute: .leading,
-                           relatedBy: .equal,
-                           toItem: safeAreaLayoutGuide,
-                           attribute: .leading,
-                           multiplier: 1,
-                           constant: 8).isActive = true
-        NSLayoutConstraint(item: label,
-                           attribute: .top,
-                           relatedBy: .equal,
-                           toItem: safeAreaLayoutGuide,
-                           attribute: .top,
-                           multiplier: 1,
-                           constant: 8).isActive = true
+        NSLayoutConstraint.activate(
+            [label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+             label.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor)])
     }
     
     required init?(coder: NSCoder) {
