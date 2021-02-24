@@ -6,7 +6,12 @@
 
 ## Ausführung
 
-Zunächst fügen wir im *Storyboard* zwei *ImageViews* hinzu und und verbinden sie mit zwei *Outlets*: `saveImageView` und `cancelImageView`. Mit diesen *ImageViews* werden `ButtonFromImage`-Objekte erzeugt. `ButtonFromImage`-Objekte reagieren auf `touchesBegan`- und `touchesEnded`-Aufrufe des `ViewControllers`. Außerdem erhält das *ImageView* in `ButtonFromImage` einen `UITapGestureRecognizer`. So können die *ImageViews* darauf reagieren, wenn sie berührt und losgelassen wurden.
+### Version 1
+
+Die zweite Version ist besser, allerdings finde ich es interessant, in der ersten Version zu sehen, dass Observer aus SwiftUI auch in UIKit sinnvoll sein können.
+
+Zunächst fügen wir im *Storyboard* zwei *ImageViews* mit passenden Bildern hinzu und und verbinden sie mit zwei *Outlets*: `saveImageView` und `cancelImageView`. Mit diesen *ImageViews* werden `ButtonFromImage`-Objekte erzeugt. `ButtonFromImage`-Objekte reagieren auf `touchesBegan`- und `touchesEnded`-Aufrufe des `ViewControllers`. Außerdem erhält das *ImageView* in `ButtonFromImage` einen `UITapGestureRecognizer`. So können die *ImageViews* darauf reagieren, wenn sie berührt und losgelassen wurden. Die beiden *Observer* sind übrigens unabhängig vom `UITapGestureRecognizer`: Zunächst setzen die Observer sie Skalierung des `ImageViews` fest. Wird das *Button* schließlich losgelassen, kann der `UITapGestureRecognizer` darauf reagieren.
+
 
 ```swift
 import UIKit
