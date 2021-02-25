@@ -165,6 +165,13 @@ class ImageButtonView: UIImageView {
         super.init(coder: coder)
         isUserInteractionEnabled = true
     }
+    
+    
+    private func reset() {
+        touched = false
+        Self.busyImageButtonView = nil
+        tapResponsePending = false
+    }
         
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if Self.busyImageButtonView != nil { return }
@@ -178,14 +185,13 @@ class ImageButtonView: UIImageView {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if Self.busyImageButtonView !== self { return }
-        touched = false
         if let location = touches.first?.location(in: self) {
             if visibleImageRect.contains(location) {
                 finishTap()
-                return
+                return // reset() not before finishTap() ended its animation!
             }
         }
-        Self.busyImageButtonView = nil
+        reset()
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -201,8 +207,7 @@ class ImageButtonView: UIImageView {
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         if Self.busyImageButtonView !== self { return }
-        touched = false
-        Self.busyImageButtonView = nil
+        reset()
     }
     
     private var tapResponsePending = false
@@ -219,7 +224,7 @@ class ImageButtonView: UIImageView {
         CATransaction.commit()
     }
     
-    /// Add a scale-down-and-up animation to its ImageView layer
+    /// Add a scale-down-and-up animation with key: "pop" to its ImageView layer
     private func visualResponseOfFinishedTap() {
         let keyframeAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
         keyframeAnimation.keyTimes = [0.2, 0.4, 1.0]
@@ -238,9 +243,9 @@ class ImageButtonView: UIImageView {
         for target in targets {
             target()
         }
-        Self.busyImageButtonView = nil
-        tapResponsePending = false
+        reset()
     }
+
 }
 
 class ViewController: UIViewController {
