@@ -224,7 +224,7 @@ class ImageButtonView: UIImageView {
         CATransaction.commit()
     }
     
-    /// Add a scale-down-and-up animation with key: "pop" to its ImageView layer
+    /// Add a scale-down-and-up animation to its ImageView layer
     private func visualResponseOfFinishedTap() {
         let keyframeAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
         keyframeAnimation.keyTimes = [0.2, 0.4, 1.0]
