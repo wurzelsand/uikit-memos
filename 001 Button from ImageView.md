@@ -122,10 +122,26 @@ Da `UIViews` wie `UIImageViews` ebenfalls `touchesBegan` und `touchesEnd` zum Ü
 ```swift
 import UIKit
 
-extension CGSize {
-    /// Test if size contains location
-    static func ~=(size: CGSize, location: CGPoint) -> Bool {
-        0...size.width ~= location.x && 0...size.height ~= location.y
+extension UIImageView {
+    var visibleImageRect: CGRect {
+        guard let image = image,
+              contentMode == .scaleAspectFit,
+              image.size.width > 0 && image.size.height > 0 else {
+            return bounds
+        }
+
+        let scale: CGFloat
+        if image.size.width > image.size.height {
+            scale = bounds.width / image.size.width
+        } else {
+            scale = bounds.height / image.size.height
+        }
+
+        let size = CGSize(width: image.size.width * scale, height: image.size.height * scale)
+        let x = (bounds.width - size.width) / 2.0
+        let y = (bounds.height - size.height) / 2.0
+
+        return CGRect(x: x, y: y, width: size.width, height: size.height)
     }
 }
 
@@ -137,28 +153,23 @@ class ImageButtonView: UIImageView, CAAnimationDelegate {
             if touched {
                 transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
             } else {
-                transform = CGAffineTransform(scaleX: 1, y: 1)
+                transform = CGAffineTransform.identity
             }
         }
     }
     
-    private var imageSize = CGSize(width: 0, height: 0)
     private var targets = [() -> Void]()
-    
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        if let image = self.image {
-            imageSize = image.size
-        }
         isUserInteractionEnabled = true
     }
-    
+        
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if Self.busyImageButtonView != nil { return }
         Self.busyImageButtonView = self
         if let location = touches.first?.location(in: self) {
-            if imageSize ~= location {
+            if visibleImageRect.contains(location) {
                 touched = true
             }
         }
@@ -168,8 +179,8 @@ class ImageButtonView: UIImageView, CAAnimationDelegate {
         if Self.busyImageButtonView !== self { return }
         touched = false
         if let location = touches.first?.location(in: self) {
-            if imageSize ~= location {
-                animateLayer()
+            if visibleImageRect.contains(location) {
+                visualResponseOfFinishedTap()
                 return
             }
         }
@@ -179,7 +190,7 @@ class ImageButtonView: UIImageView, CAAnimationDelegate {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if Self.busyImageButtonView !== self { return }
         if let location = touches.first?.location(in: self) {
-            if imageSize ~= location {
+            if visibleImageRect.contains(location) {
                 touched = true
             } else {
                 touched = false
@@ -194,7 +205,7 @@ class ImageButtonView: UIImageView, CAAnimationDelegate {
     }
     
     /// Add a scale-down-and-up animation with key: "pop" to its ImageView layer
-    private func animateLayer() {
+    private func visualResponseOfFinishedTap() {
         let keyframeAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
         keyframeAnimation.keyTimes = [0.2, 0.4, 1.0]
         keyframeAnimation.values = [0.9, 1.2, 1.0]
@@ -213,7 +224,7 @@ class ImageButtonView: UIImageView, CAAnimationDelegate {
     
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         Self.busyImageButtonView = nil
-        if anim == layer.animation(forKey: "pop") {
+        if anim === layer.animation(forKey: "pop") {
             layer.removeAnimation(forKey: "pop")
             executeCompletionHandlers()
         }
