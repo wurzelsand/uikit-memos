@@ -145,11 +145,12 @@ extension UIImageView {
     }
 }
 
-class ImageButtonView: UIImageView, CAAnimationDelegate {
+class ImageButtonView: UIImageView {
     private static var busyImageButtonView: ImageButtonView?
 
     private var touched = false {
         didSet {
+            guard oldValue != touched else { return }
             if touched {
                 transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
             } else {
@@ -180,7 +181,7 @@ class ImageButtonView: UIImageView, CAAnimationDelegate {
         touched = false
         if let location = touches.first?.location(in: self) {
             if visibleImageRect.contains(location) {
-                visualResponseOfFinishedTap()
+                finishTap()
                 return
             }
         }
@@ -204,17 +205,28 @@ class ImageButtonView: UIImageView, CAAnimationDelegate {
         Self.busyImageButtonView = nil
     }
     
+    private var tapResponsePending = false
+    
+    private func finishTap() {
+        if tapResponsePending {
+            return
+        } else {
+            tapResponsePending = true
+        }
+        CATransaction.begin()
+        CATransaction.setCompletionBlock(executeCompletionHandlers)
+        visualResponseOfFinishedTap()
+        CATransaction.commit()
+    }
+    
     /// Add a scale-down-and-up animation with key: "pop" to its ImageView layer
     private func visualResponseOfFinishedTap() {
         let keyframeAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
         keyframeAnimation.keyTimes = [0.2, 0.4, 1.0]
         keyframeAnimation.values = [0.9, 1.2, 1.0]
         keyframeAnimation.duration = 0.3
-        keyframeAnimation.delegate = self
-        keyframeAnimation.isRemovedOnCompletion = false
         keyframeAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
         layer.add(keyframeAnimation, forKey: "pop")
-        transform = CGAffineTransform(scaleX: 1, y: 1)
     }
     
     /// Add action to be executed after animations completion
@@ -222,18 +234,12 @@ class ImageButtonView: UIImageView, CAAnimationDelegate {
         targets.append(action)
     }
     
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        Self.busyImageButtonView = nil
-        if anim === layer.animation(forKey: "pop") {
-            layer.removeAnimation(forKey: "pop")
-            executeCompletionHandlers()
-        }
-    }
-    
     private func executeCompletionHandlers() {
         for target in targets {
             target()
         }
+        Self.busyImageButtonView = nil
+        tapResponsePending = false
     }
 }
 
