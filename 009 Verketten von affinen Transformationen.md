@@ -98,3 +98,23 @@ entspricht
                   .concatenating(CGAffineTransform(scaleX: 0.5, y: 1))
                   .concatenating(CGAffineTransform(rotationAngle: .pi / 4))
       ```
+
+### Layer
+
+Statt:
+
+```swift
+transform = transformations[count]
+```
+
+ginge auch:
+
+```swift
+layer.setAffineTransform(transformations[count]) // okay
+```
+
+`layer.presentation()` gibt aber nur eine Kopie des aktuell angezeigten Layers zurück. Das ginge also nicht, da wirkungslos:
+
+```swift
+layer.presentation()?.setAffineTransform(transformations[count]) // no
+```
