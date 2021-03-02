@@ -24,7 +24,7 @@ class RedView: UIView {
 }
 ```
 
-Wir wollen, dass alle sechs möglichen Kombinationsmöglichkeiten von 3 affinen Transformationen (Rotation um 90˚, X-Skalierung 50%, Verschiebung (x: 100, y: 200)) nacheinander durchlaufen werden, wenn auf das *View* geklickt wird.
+Wir wollen, dass alle sechs möglichen Kombinationsmöglichkeiten von 3 affinen Transformationen (Rotation um 45˚, X-Skalierung 50%, Verschiebung (x: 100, y: 200)) nacheinander durchlaufen werden, wenn auf das *View* geklickt wird.
 
 ## Ausführung
 
