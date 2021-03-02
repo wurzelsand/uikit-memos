@@ -118,3 +118,53 @@ layer.setAffineTransform(transformations[count]) // okay
 ```swift
 layer.presentation()?.setAffineTransform(transformations[count]) // no
 ```
+
+### Transform3D
+
+Mit `CATransform3DGetAffineTransform` und `CATransform3DMakeAffineTransform` kann man zwischen `CGAffineTransform` und `CATransform3D` wechseln. Um das vorherige Beispiel mit *Transform3D* zu implementieren:
+
+```swift
+import UIKit
+
+class ViewController: UIViewController {
+    ...
+}
+
+class RedView: UIView {
+    ...
+    
+    private struct Transformations {
+        var transformation: CATransform3D
+        
+        var rotate: Transformations {
+            Transformations(transformation: CATransform3DRotate(transformation, .pi / 4, 0, 0, 1))
+        }
+        
+        var scale: Transformations {
+            Transformations(transformation: CATransform3DScale(transformation, 0.5, 1, 1))
+        }
+        
+        var translate: Transformations {
+            Transformations(transformation: CATransform3DTranslate(transformation, 100, 200, 0))
+        }
+    }
+    
+    private static let identity = Transformations(transformation: CATransform3DIdentity)
+    var transformations = [
+        identity.rotate.scale.translate,
+        identity.rotate.translate.scale,
+        identity.scale.rotate.translate,
+        identity.scale.translate.rotate,
+        identity.translate.rotate.scale,
+        identity.translate.scale.rotate,
+        identity
+    ].map { $0.transformation }
+    
+    ...
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        ...
+        layer.transform = transformations[count]
+        ...
+    }
+}
+```
