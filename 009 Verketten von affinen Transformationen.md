@@ -168,3 +168,22 @@ class RedView: UIView {
     }
 }
 ```
+
+Skalierung und Rotation lassen sich vielleicht so ermitteln:
+
+```swift
+extension CATransform3D {
+    /// Get 2D projection of angle.
+    var angle: CGFloat {
+        atan2(m12, m11)
+    }
+    /// Get 2D projection of xScale.
+    var xScale: CGFloat {
+        sqrt(m11 * m11 + m12 * m12)
+    }
+    /// Get 2D projection of yScale.
+    var yScale: CGFloat {
+        sqrt(m21 * m21 + m22 * m22)
+    }
+}
+```
